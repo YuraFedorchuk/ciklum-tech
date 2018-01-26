@@ -1,0 +1,24 @@
+To run the project Redis server should be 
+launched at 127.0.0.1:6379
+
+Server handles POST requests on /echoAtTime
+Required params (application/json):
+    message: String
+    date: valid date String
+
+Some work principles:
+    - server runs on Express just for possible maintability purposes
+    - for handling redis - node-redis module is used
+    - each request shedules a message in a redis Sorted Set with score - date
+    - on startup server checks if there are entites in the set, which timeout
+        is already passed. It prints their messages and deletes the enitites
+        from redis
+    - for scheduling node-schedule module is used. For memory consumption 
+        purposes only one task at a time is scheduled - the most recent 
+        message to be printed. After it is printed the new task is scheduled - 
+        the next message in a Set. And so on. 
+    - server validates input data
+    - only one redis store is used, so multiple clones of processes will handle
+        the same redis entity
+    - if date, that is passed as parameter is less than the current date, the
+        message is processed withoud being added to redis
