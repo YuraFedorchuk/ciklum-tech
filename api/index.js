@@ -44,7 +44,7 @@ const api = {
     echoAtTime: (message, date) => {
         return new Promise((resolve, reject) => {
              if (!message || !date) {
-                return reject('Empty params');
+                return reject('Bad params');
             }
     
             if (!moment(date).isValid()) {
